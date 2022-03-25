@@ -1,0 +1,21 @@
+{
+  "name": "leaflet-restore-map",
+  "version": "1.0.0",
+  "description": "Store and restore a map's view and active layers",
+  "main": "src/Leaflet.restoreMap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shaefner-usgs/Leaflet.restoreMap.git"
+  },
+  "keywords": [
+    "leaflet",
+    "maps",
+    "restore"
+  ],
+  "author": "Scott Haefner",
+  "license": "CC0",
+  "homepage": "https://github.com/shaefner-usgs/Leaflet.restoreMap#readme"
+}
