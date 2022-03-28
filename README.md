@@ -27,9 +27,9 @@ map.restoreMap(<Object> options?)
 | Option | Type | Default | Description |
 | ------ | ------ | ------ | ------ |
 | baseLayers | Object | {} | Object literal with layer names as keys and Layer objects as values for the layers you want to remember. Typically the *baselayers* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). |
-| id | String | '\_shared\_' | Unique value used to save settings for multiple maps separately. |
+| id | String | 'shared' | Unique value used to save settings for multiple maps separately. |
 | layerStorageType | String | 'local' | Storage type for the map's layers ('local' or 'session'). |
 | overlays | Object | {} | Object literal with layer names as keys and Layer objects as values for the layers you want to remember. Typically the *overlays* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). |
-| scope | String | '\_global\_' | Groups shared map layer settings across a domain. Typically the app’s name. |
+| scope | String | 'global' | Groups shared map layer settings across a domain. Typically the app’s name. |
 | shareLayers | Boolean | false | Whether or not to share the stored map layers between multiple maps within the same scope. |
 | viewStorageType | String | 'session' | Storage type for the map’s center and zoom level ('local' or 'session'). |

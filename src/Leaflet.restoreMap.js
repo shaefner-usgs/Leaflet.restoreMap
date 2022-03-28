@@ -52,10 +52,10 @@
 
         options = L.extend({
           baseLayers: {},
-          id: '_shared_',
+          id: 'shared',
           layerStorageType: 'local',
           overlays: {},
-          scope: '_global_',
+          scope: 'global',
           shareLayers: false,
           viewStorageType: 'session'
         }, options);
