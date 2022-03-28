@@ -2,36 +2,6 @@
 'use strict';
 
 
-/**
- * Leaflet.restoreMap plugin - store and restore a map's settings.
- *
- * 1. remembers map view (center and zoom level)
- * 2. remembers selected layers, including grouped layers
- *    compatible with https://github.com/ismyrnow/Leaflet.groupedlayercontrol
- * 3. remembers fullscreen mode
- *    compatible with https://github.com/Leaflet/Leaflet.fullscreen
- * 4. option to share layer settings among multiple maps within an app/site
- *
- * Usage: map.restoreMap(options)
- *
- * @param options {Object} optional
- *     {
- *       baseLayers {Object <Layer Config>}
- *           req'd for restoring the map's base layer
- *       id {String}
- *           saves each map's settings separately
- *       layerStorageType {String <local|session>}
- *       overlays {Object <Layer Config>}
- *           req'd for restoring the map's overlays
- *       scope {String <AppName>}
- *           isolates shared map layer settings across a domain
- *       shareLayers {Boolean}
- *           shares map layer settings between multiple maps in the same scope
- *       viewStorageType {String <local|session>}
- *     }
- *
- * <Layer Config> : http://leafletjs.com/reference.html#control-layers
- */
 L.RestoreMapMixin = {
   restoreMap: function (options) {
     var _baseLayers,
