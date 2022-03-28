@@ -19,7 +19,7 @@ var map = L.map();
 3. Initialize the Restore Map plugin:
 
 ```js
-map.restoreMap(options?)
+map.restoreMap(<Object> options?)
 ```
 
 ### Options
