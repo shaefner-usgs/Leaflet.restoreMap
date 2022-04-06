@@ -13,18 +13,14 @@
     factory(window.L);
   }
 }(function (L) {
-  L.RestoreMapMixin = {
+  L.Map.include({
     restoreMap: function (options) {
-      var _baseLayers,
+      var _id,
           _layers,
-          _layersId,
-          _layersStorage,
           _map,
-          _overlays,
           _scope,
-          _view,
-          _viewId,
-          _viewStorage,
+          _settings,
+          _storage,
 
           _addListeners,
           _baselayerchange,
@@ -60,18 +56,26 @@
           viewStorageType: 'session'
         }, options);
 
-        _baseLayers = options.baseLayers;
-        _layersStorage = storage[options.layerStorageType];
-        _layers = JSON.parse(_layersStorage.mapLayers || '{}');
-        _layersId = options.id;
-        _overlays = options.overlays,
+        _id = {
+          layers: options.id,
+          view: options.id
+        }
+        _layers = {
+          baseLayers: options.baseLayers,
+          overlays: options.overlays
+        }
         _scope = options.scope;
-        _viewStorage = storage[options.viewStorageType];
-        _view = JSON.parse(_viewStorage.mapView || '{}');
-        _viewId = options.id;
+        _storage = {
+          layers: storage[options.layerStorageType],
+          view: storage[options.viewStorageType]
+        }
+        _settings = {
+          layers: JSON.parse(_storage.layers.mapLayers || '{}'),
+          view: JSON.parse(_storage.view.mapView || '{}')
+        };
 
         if (options.shareLayers) {
-          _layersId = '_shared_'; // share settings across multiple maps
+          _id.layers = 'shared'; // share settings across multiple maps
         }
 
         _addListeners();
@@ -100,16 +104,17 @@
        * @param e {Event}
        */
       _baselayerchange = function (e) {
-        _layers[_scope][_layersId].base = e.name;
+        var settings = _settings.layers[_scope][_id.layers];
 
-        _layersStorage.mapLayers = JSON.stringify(_layers);
+        settings.base = e.name;
+        _storage.layers.mapLayers = JSON.stringify(_settings.layers);
       };
 
       /**
        * Handler for when fullscreen mode changes.
        */
       _fullscreenchange = function () {
-        var settings = _view[_scope][_viewId];
+        var settings = _settings.view[_scope][_id.view];
 
         if (_map.isFullscreen()) {
           settings.fs = true;
@@ -117,7 +122,7 @@
           settings.fs = false;
         }
 
-        _viewStorage.mapView = JSON.stringify(_view);
+        _storage.view.mapView = JSON.stringify(_settings.view);
       };
 
       /**
@@ -155,11 +160,11 @@
         var overlay;
 
         if (layer.group) {
-          if (Object.prototype.hasOwnProperty.call(_overlays, layer.group)) {
-            overlay = _overlays[layer.group][layer.name];
+          if (Object.prototype.hasOwnProperty.call(_layers.overlays, layer.group)) {
+            overlay = _layers.overlays[layer.group][layer.name];
           }
         } else {
-          overlay = _overlays[layer.name];
+          overlay = _layers.overlays[layer.name];
         }
 
         return overlay;
@@ -169,21 +174,21 @@
        * Initialize Object templates that store the map's settings.
        */
       _initSettings = function () {
-        if (!_layers[_scope]) {
-          _layers[_scope] = {};
+        if (!_settings.layers[_scope]) {
+          _settings.layers[_scope] = {};
         }
-        if (!_layers[_scope][_layersId]) {
-          _layers[_scope][_layersId] = {
+        if (!_settings.layers[_scope][_id.layers]) {
+          _settings.layers[_scope][_id.layers] = {
             add: [],
             remove: []
           };
         }
 
-        if (!_view[_scope]) {
-          _view[_scope] = {};
+        if (!_settings.view[_scope]) {
+          _settings.view[_scope] = {};
         }
-        if (!_view[_scope][_viewId]) {
-          _view[_scope][_viewId] = {};
+        if (!_settings.view[_scope][_id.view]) {
+          _settings.view[_scope][_id.view] = {};
         }
       };
 
@@ -202,7 +207,7 @@
        * Handler for when the map extent changes.
        */
       _moveend = function () {
-        var settings = _view[_scope][_viewId];
+        var settings = _settings.view[_scope][_id.view];
 
         if (!_map._loaded) {
           return; // don't access map bounds if view is not set
@@ -212,7 +217,7 @@
         settings.lng = _map.getCenter().lng;
         settings.zoom = _map.getZoom();
 
-        _viewStorage.mapView = JSON.stringify(_view);
+        _storage.view.mapView = JSON.stringify(_settings.view);
       };
 
       /**
@@ -223,7 +228,7 @@
       _overlayadd = function (e) {
         _updateLayers(e, 'add');
 
-        _layersStorage.mapLayers = JSON.stringify(_layers);
+        _storage.layers.mapLayers = JSON.stringify(_settings.layers);
       };
 
       /**
@@ -234,7 +239,7 @@
       _overlayremove = function (e) {
         _updateLayers(e, 'remove');
 
-        _layersStorage.mapLayers = JSON.stringify(_layers);
+        _storage.layers.mapLayers = JSON.stringify(_settings.layers);
       };
 
       /**
@@ -253,12 +258,12 @@
        * Restore map layers.
        */
       _restoreLayers = function () {
-        var settings = _layers[_scope][_layersId];
+        var settings = _settings.layers[_scope][_id.layers];
 
         if (!_isEmpty(settings)) {
           if (settings.base) {
-            Object.keys(_baseLayers).forEach(name => {
-              var baseLayer = _baseLayers[name];
+            Object.keys(_layers.baseLayers).forEach(name => {
+              var baseLayer = _layers.baseLayers[name];
 
               if (name === settings.base) {
                 _map.addLayer(baseLayer);
@@ -293,7 +298,7 @@
         var latlng,
             settings;
 
-        settings = _view[_scope][_viewId];
+        settings = _settings.view[_scope][_id.view];
 
         if (!_isEmpty(settings)) {
           latlng = L.latLng(settings.lat, settings.lng);
@@ -316,7 +321,7 @@
         var index,
             settings;
 
-        settings = _layers[_scope][_layersId];
+        settings = _settings.layers[_scope][_id.layers];
         index = {
           add: _getIndex(settings.add, e.name),
           remove: _getIndex(settings.remove, e.name)
@@ -342,8 +347,5 @@
       _initialize(options);
       options = null;
     }
-  };
-
-
-  L.Map.include(L.RestoreMapMixin);
+  });
 }));
