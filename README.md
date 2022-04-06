@@ -1,6 +1,6 @@
 # Leaflet.restoreMap
 
-Leaflet plugin that stores and restores a map’s settings when a web page is reloaded. The map’s center and zoom level are stored by default, as well as full screen status (compatible with [Leaflet.fullscreen](https://github.com/shaefner-usgs/Leaflet.fullscreen)). Optionally, the selected map layers (base layers, overlays and [grouped overlays](https://github.com/ismyrnow/leaflet-groupedlayercontrol)) can be stored as well.
+Leaflet plugin that stores and restores a map’s settings when a web page is reloaded. The map’s view (center and zoom level) is stored by default, as well as full screen status (compatible with [Leaflet.fullscreen](https://github.com/shaefner-usgs/Leaflet.fullscreen)). Optionally, the selected map layers (base layers, overlays and [grouped overlays](https://github.com/ismyrnow/leaflet-groupedlayercontrol)) can be stored as well.
 
 ### Usage Example
 
@@ -26,10 +26,10 @@ map.restoreMap(<Object> options?)
 
 | Option | Type | Default | Description |
 | ------ | ------ | ------ | ------ |
-| baseLayers | Object | {} | Object literal with layer names as keys and Layer objects as values for the layers you want to remember. Typically the *baselayers* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). |
+| baseLayers | Object | {} | Object literal with layer names as keys and Layer objects as values for the base layers you want to remember. Typically the *baselayers* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). |
 | id | String | 'shared' | Unique value used to save settings for multiple maps separately. |
 | layerStorageType | String | 'local' | Storage type for the map's layers ('local' or 'session'). |
-| overlays | Object | {} | Object literal with layer names as keys and Layer objects as values for the layers you want to remember. Typically the *overlays* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). |
+| overlays | Object | {} | Object literal with layer names as keys and Layer objects as values for the overlays you want to remember. Typically the *overlays* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). |
 | scope | String | 'global' | Groups shared map layer settings across a domain. Typically the app’s name. |
-| shareLayers | Boolean | false | Whether or not to share the stored map layers between multiple maps within the same scope. |
+| shareLayers | Boolean | false | Whether or not to share the stored map layers between multiple maps within the same scope. Allows multiple maps to share layer settings, but retain individual view settings when each map has a unique id value set. |
 | viewStorageType | String | 'session' | Storage type for the map’s center and zoom level ('local' or 'session'). |
