@@ -357,15 +357,11 @@
       /**
        * Add an overlay to be tracked.
        *
-       * @param layer {Object}
-       *     {
-       *       layerName: L.Layer
-       *     }
+       * @param layer {L.Layer}
+       * @param name {String}
        */
-      _this.addOverlay = function (layer) {
-        var name = Object.keys(layer)[0];
-
-        _layers.overlays[name] = layer[name];
+      _this.addOverlay = function (layer, name) {
+        _layers.overlays[name] = layer;
 
         _restoreLayers();
       };
@@ -373,14 +369,9 @@
       /**
        * Remove an overlay from being tracked.
        *
-       * @param layer {Object}
-       *     {
-       *       layerName: L.Layer
-       *     }
+       * @param name {String}
        */
-      _this.removeOverlay = function (layer) {
-        var name = Object.keys(layer)[0];
-
+      _this.removeOverlay = function (name) {
         delete _layers.overlays[name];
 
         _restoreLayers();
