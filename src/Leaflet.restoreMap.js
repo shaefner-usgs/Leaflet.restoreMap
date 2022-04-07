@@ -21,6 +21,7 @@
           _scope,
           _settings,
           _storage,
+          _this,
 
           _addListeners,
           _baselayerchange,
@@ -36,9 +37,11 @@
           _restore,
           _restoreLayers,
           _restoreView,
-          _updateLayers;
+          _updateOverlays;
+
 
       _map = this;
+      _this = {};
 
       _initialize = function (options) {
         var storage = {
@@ -126,18 +129,18 @@
       };
 
       /**
-       * Get the Array index of the layer whose name matches the given name.
+       * Get the Array index of the overlay that matches the given name.
        *
-       * @param layers {Array}
+       * @param overlays {Array}
        * @param name {String}
        *
        * @return index {Integer} default is -1
        */
-      _getIndex = function (layers, name) {
+      _getIndex = function (overlays, name) {
         var index = -1;
 
-        layers.forEach((layer, i) => {
-          if (layer.name === name) {
+        overlays.forEach((overlay, i) => {
+          if (overlay.name === name) {
             index = i;
           }
         });
@@ -146,9 +149,9 @@
       };
 
       /**
-       * Get the Leaflet overlay from a layer group/name.
+       * Get the associated Leaflet overlay from a tracked item's group/name.
        *
-       * @param layer {Object}
+       * @param item {Object}
        *     {
        *       group {String}
        *       name {String}
@@ -156,15 +159,15 @@
        *
        * @return overlay {L.layer}
        */
-      _getOverlay = function (layer) {
+      _getOverlay = function (item) {
         var overlay;
 
-        if (layer.group) {
-          if (Object.prototype.hasOwnProperty.call(_layers.overlays, layer.group)) {
-            overlay = _layers.overlays[layer.group][layer.name];
+        if (item.group) {
+          if (Object.prototype.hasOwnProperty.call(_layers.overlays, item.group)) {
+            overlay = _layers.overlays[item.group][item.name];
           }
         } else {
-          overlay = _layers.overlays[layer.name];
+          overlay = _layers.overlays[item.name];
         }
 
         return overlay;
@@ -193,7 +196,7 @@
       };
 
       /**
-       * Check if a javascript Object is empty.
+       * Check if an Object is empty.
        *
        * @param obj {Object}
        *
@@ -226,7 +229,7 @@
        * @param e {Event}
        */
       _overlayadd = function (e) {
-        _updateLayers(e, 'add');
+        _updateOverlays(e, 'add');
 
         _storage.layers.mapLayers = JSON.stringify(_settings.layers);
       };
@@ -237,7 +240,7 @@
        * @param e {Event}
        */
       _overlayremove = function (e) {
-        _updateLayers(e, 'remove');
+        _updateOverlays(e, 'remove');
 
         _storage.layers.mapLayers = JSON.stringify(_settings.layers);
       };
@@ -273,16 +276,16 @@
             });
           }
 
-          settings.add.forEach(layer => {
-            var overlay = _getOverlay(layer);
+          settings.add.forEach(item => {
+            var overlay = _getOverlay(item);
 
             if (overlay && !_map.hasLayer(overlay)) {
               _map.addLayer(overlay);
             }
           });
 
-          settings.remove.forEach(layer => {
-            var overlay = _getOverlay(layer);
+          settings.remove.forEach(item => {
+            var overlay = _getOverlay(item);
 
             if (overlay && _map.hasLayer(overlay)) {
               _map.removeLayer(overlay);
@@ -312,14 +315,15 @@
       };
 
       /**
-       * Update the list of tracked layers.
+       * Update the list of stored overlays.
        *
        * @param e {Event}
-       * @param type {String <add|remove>}
+       * @param action {String <add|remove>}
        */
-      _updateLayers = function (e, type) {
+      _updateOverlays = function (e, action) {
         var index,
-            settings;
+            settings,
+            tracked;
 
         settings = _settings.layers[_scope][_id.layers];
         index = {
@@ -327,25 +331,65 @@
           remove: _getIndex(settings.remove, e.name)
         };
 
-        Object.keys(index).forEach(key => {
-          if (key === type) { // add layer to list if not present
-            if (index[key] === -1) {
-              settings[key].push({
+        Object.keys(index).forEach(type => {
+          tracked = _layers.overlays[e.name];
+
+          // Add/remove an overlay to/from the list of stored overlays
+          if (type === action) {
+            if (tracked && index[type] === -1) { // add to add/remove list
+              settings[type].push({
                 group: e.group?.name || null,
                 name: e.name
               });
             }
-          } else { // remove layer from list if present
-            if (index[key] !== -1) {
-              settings[key].splice(index[key], 1);
+          } else {
+            if (tracked && index[type] !== -1) { // remove from add/remove list
+              settings[type].splice(index[type], 1);
             }
           }
         });
       };
 
+      // ----------------------------------------------------------
+      // Public methods
+      // ----------------------------------------------------------
+
+      /**
+       * Add an overlay to be tracked.
+       *
+       * @param layer {Object}
+       *     {
+       *       layerName: L.Layer
+       *     }
+       */
+      _this.addOverlay = function (layer) {
+        var name = Object.keys(layer)[0];
+
+        _layers.overlays[name] = layer[name];
+
+        _restoreLayers();
+      };
+
+      /**
+       * Remove an overlay from being tracked.
+       *
+       * @param layer {Object}
+       *     {
+       *       layerName: L.Layer
+       *     }
+       */
+      _this.removeOverlay = function (layer) {
+        var name = Object.keys(layer)[0];
+
+        delete _layers.overlays[name];
+
+        _restoreLayers();
+      };
+
 
       _initialize(options);
       options = null;
+      return _this;
     }
   });
 }));
