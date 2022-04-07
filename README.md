@@ -19,17 +19,30 @@ var map = L.map();
 3. Initialize the Restore Map plugin:
 
 ```js
-map.restoreMap(<Object> options?)
+var restoreMap = map.restoreMap(<Object> options?);
+```
+
+4. Add an overlay to be tracked after initialization:
+
+```
+restoreMap.addOverlay(<Layer> layer, <String> name);
 ```
 
 ### Options
 
 | Option | Type | Default | Description |
 | ------ | ------ | ------ | ------ |
-| baseLayers | Object | {} | Object literal with layer names as keys and Layer objects as values for the base layers you want to remember. Typically the *baselayers* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). |
+| baseLayers | Object | {} | Object literal with layer names as keys and Layer objects as values for the map’s base layers. Typically the *baselayers* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). Note that all base layers must be included. |
 | id | String | 'shared' | Unique value used to save settings for multiple maps separately. |
 | layerStorageType | String | 'local' | Storage type for the map's layers ('local' or 'session'). |
-| overlays | Object | {} | Object literal with layer names as keys and Layer objects as values for the overlays you want to remember. Typically the *overlays* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). |
+| overlays | Object | {} | Object literal with layer names as keys and Layer objects as values for the overlays you want to track. Typically the *overlays* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). |
 | scope | String | 'global' | Groups shared map layer settings across a domain. Typically the app’s name. |
 | shareLayers | Boolean | false | Whether or not to share the stored map layers between multiple maps within the same scope. Allows multiple maps to share layer settings, but retain individual view settings when each map has a unique id value set. |
 | viewStorageType | String | 'session' | Storage type for the map’s center and zoom level ('local' or 'session'). |
+
+### Methods
+
+| Method | Returns | Description |
+| ------ | ------ | ------ |
+| addOverlay(<Layer> layer, <String> name) | null | Adds an overlay with the given name to the list of tracked overlays. |
+| removeOverlay(<String> name) | null | Removes the overlay with the given name from the list of tracked overlays. |
