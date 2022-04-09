@@ -355,6 +355,18 @@
       // ----------------------------------------------------------
 
       /**
+       * Add a base layer to be tracked.
+       *
+       * @param layer {L.Layer}
+       * @param name {String}
+       */
+      _this.addBaseLayer = function (layer, name) {
+        _layers.baseLayers[name] = layer;
+
+        _restoreLayers();
+      };
+
+      /**
        * Add an overlay to be tracked.
        *
        * @param layer {L.Layer}

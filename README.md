@@ -25,14 +25,14 @@ var restoreMap = map.restoreMap(<Object> options?);
 4. Add an overlay to be tracked after initialization:
 
 ```
-restoreMap.addOverlay(<Layer> layer, <String> name);
+restoreMap.addOverlay(<L.Layer> layer, <String> name);
 ```
 
 ### Options
 
 | Option | Type | Default | Description |
 | ------ | ------ | ------ | ------ |
-| baseLayers | Object | {} | Object literal with layer names as keys and Layer objects as values for the map’s base layers. Typically the *baselayers* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). Note that all base layers must be included. |
+| baseLayers | Object | {} | Object literal with layer names as keys and Layer objects as values for the map’s base layers. Typically the *baselayers* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). Note: all of the map’s base layers must be included. |
 | id | String | 'shared' | Unique value used to save settings for multiple maps separately. |
 | layerStorageType | String | 'local' | Storage type for the map's layers ('local' or 'session'). |
 | overlays | Object | {} | Object literal with layer names as keys and Layer objects as values for the overlays you want to track. Typically the *overlays* parameter for [L.control.layers](https://leafletjs.com/reference.html#control-layers). |
@@ -44,5 +44,6 @@ restoreMap.addOverlay(<Layer> layer, <String> name);
 
 | Method | Returns | Description |
 | ------ | ------ | ------ |
-| addOverlay(<Layer> layer, <String> name) | null | Adds an overlay with the given name to the list of tracked overlays. |
+| addBaseLayer(<L.Layer> layer, <String> name) | null | Adds a baseLayer with the given name to the list of tracked baseLayers. |
+| addOverlay(<L.Layer> layer, <String> name) | null | Adds an overlay with the given name to the list of tracked overlays. |
 | removeOverlay(<String> name) | null | Removes the overlay with the given name from the list of tracked overlays. |
