@@ -10,6 +10,12 @@ Leaflet plugin that stores and restores a map’s settings when a web page is re
 <script src='Leaflet.restoreMap.js'></script>
 ```
 
+or 
+
+```js
+require('leaflet-restore-map');
+```
+
 2. Create a Leaflet map instance as usual:
 
 ```js
@@ -22,7 +28,7 @@ var map = L.map();
 var restoreMap = map.restoreMap(<Object> options?);
 ```
 
-4. Add an overlay to be tracked after initialization:
+Add an overlay to be tracked after initialization:
 
 ```
 restoreMap.addOverlay(<L.Layer> layer, <String> name);
