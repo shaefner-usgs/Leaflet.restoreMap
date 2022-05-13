@@ -1,6 +1,6 @@
 /**
- * This class extends L.map to restore the map's settings when its web page is
- * reloaded.
+ * This class adds a mixin (restoreMap) to L.map to restore the map's settings 
+ * when its web page is reloaded.
  */
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
