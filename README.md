@@ -50,6 +50,6 @@ restoreMap.addOverlay(<L.Layer> layer, <String> name);
 
 | Method | Returns | Description |
 | ------ | ------ | ------ |
-| addBaseLayer(<L.Layer> layer, <String> name) | null | Adds a baseLayer with the given name to the list of tracked baseLayers. |
-| addOverlay(<L.Layer> layer, <String> name) | null | Adds an overlay with the given name to the list of tracked overlays. |
-| removeOverlay(<String> name) | null | Removes the overlay with the given name from the list of tracked overlays. |
+| `addBaseLayer(<L.Layer> layer, <String> name)` | null | Adds a baseLayer with the given name to the list of tracked baseLayers. |
+| `addOverlay(<L.Layer> layer, <String> name)` | null | Adds an overlay with the given name to the list of tracked overlays. |
+| `removeOverlay(<String> name)` | null | Removes the overlay with the given name from the list of tracked overlays. |
