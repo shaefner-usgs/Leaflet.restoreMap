@@ -1,5 +1,5 @@
 /**
- * This class adds a mixin (restoreMap) to L.map to restore the map's settings 
+ * This class adds a mixin (restoreMap) to L.map to restore the map's settings
  * when its web page is reloaded.
  */
 (function (factory) {
@@ -303,9 +303,7 @@
        */
       _restoreView = function () {
         var latlng,
-            settings;
-
-        settings = _settings.view[_scope][_id.view];
+            settings = _settings.view[_scope][_id.view];
 
         if (!_isEmpty(settings)) {
           latlng = L.latLng(settings.lat, settings.lng);
@@ -325,24 +323,24 @@
        * @param action {String <add|remove>}
        */
       _updateOverlays = function (e, action) {
-        var index,
-            settings,
-            tracked;
+        var group = e.group || {},
+            settings = _settings.layers[_scope][_id.layers],
+            index = {
+              add: _getIndex(settings.add, e.name),
+              remove: _getIndex(settings.remove, e.name)
+            },
+            tracked = _layers.overlays[e.name]; // default
 
-        settings = _settings.layers[_scope][_id.layers];
-        index = {
-          add: _getIndex(settings.add, e.name),
-          remove: _getIndex(settings.remove, e.name)
-        };
+        if (group.name) { // grouped overlay
+          tracked = _layers.overlays[group.name][e.name];
+        }
 
+        // Add/remove an overlay to/from the list of stored overlays
         Object.keys(index).forEach(type => {
-          tracked = _layers.overlays[e.name];
-
-          // Add/remove an overlay to/from the list of stored overlays
           if (type === action) {
             if (tracked && index[type] === -1) { // add to add/remove list
               settings[type].push({
-                group: e.group?.name || null,
+                group: group.name || null,
                 name: e.name
               });
             }
